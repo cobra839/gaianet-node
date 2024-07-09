@@ -9,7 +9,7 @@ target=$(uname -m)
 cwd=$(pwd)
 
 repo_branch="main"
-version="0.2.0"
+version="0.2.1"
 rag_api_server_version="0.7.2"
 llama_api_server_version="0.12.2"
 ggml_bn="b3259"
@@ -175,12 +175,14 @@ if [ -d "$gaianet_base_dir" ]; then
             exit 0
 
         else
-            read -p "The gaianet node will be upgraded to v$version. It is stongly recommended to (1) STOP the running node and (2) backup $gaianet_base_dir directory before continue the upgrade process. Continue? (y/n): " answer
-            case $answer in
-                [Yy]* ) printf "\n";;
-                [Nn]* ) printf "Exiting upgrade process.\n"; exit;;
-                * ) printf "Please answer y or n.\n"; exit;;
-            esac
+            while true; do
+                read -p "The gaianet node will be upgraded to v$version. It is strongly recommended to (1) STOP the running node and (2) backup $gaianet_base_dir directory before continuing the upgrade process. Continue? (y/n): " answer
+                case $answer in
+                    [Yy]* ) break;;
+                    [Nn]* ) echo "Upgrade cancelled."; exit;;
+                    * ) echo "Please answer y or n.";;
+                esac
+            done
         fi
 
         printf "[+] Performing backup before upgrading to v$version ...\n\n"
